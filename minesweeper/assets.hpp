@@ -13,26 +13,25 @@ const std::string k6("6");
 const std::string k7("7");
 const std::string k8("8");
 
-template <typename T>
-class Asset {
+class Texture {
  public:
-  typedef T type;
-  typedef T* type_ptr;
+  Texture(SDL_Texture* texture) : _tex(texture) {}
+  ~Texture() { SDL_DestroyTexture(_tex); }
 
-  Asset(type_ptr asset, std::function<void(type_ptr)> destroyFn)
-      : _asset(asset) {
-    _destroy_fn = std::move(destroyFn);
+  Texture(const Texture&) = delete;
+  Texture& operator=(const Texture&) = delete;
+
+  Texture(Texture&& other) {
+    SDL_DestroyTexture(_tex);
+    _tex = other._tex;
+    other._tex = nullptr;
   }
-  ~Asset() { _destroy_fn(_asset); }
 
-  type_ptr raw_ptr() const { return _asset; }
+  SDL_Texture* raw_ptr() const { return _tex; }
 
  private:
-  type_ptr _asset;
-  std::function<void(type_ptr)> _destroy_fn;
+  SDL_Texture* _tex{nullptr};
 };
-
-using Texture = Asset<SDL_Texture>;
 
 /// @brief
 ///

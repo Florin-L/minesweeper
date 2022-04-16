@@ -35,15 +35,14 @@ bool GraphicsAssets::load() {
   if (!unexplored) {
     return false;
   }
-  _graphics.emplace(kUnexplored,
-                    std::make_shared<Texture>(unexplored, SDL_DestroyTexture));
+  _graphics.emplace(kUnexplored, std::make_shared<Texture>(unexplored));
 
   SDL_Texture* mine = createTextureFromImage(
       _renderer, "mine", _assetsDir, "Minesweeper_LAZARUS_21x21_mine.png");
   if (!mine) {
     return false;
   }
-  _graphics.emplace(kMine, std::make_shared<Texture>(mine, SDL_DestroyTexture));
+  _graphics.emplace(kMine, std::make_shared<Texture>(mine));
 
   SDL_Texture* mineHit =
       createTextureFromImage(_renderer, "mine_hit", _assetsDir,
@@ -51,8 +50,7 @@ bool GraphicsAssets::load() {
   if (!mineHit) {
     return false;
   }
-  _graphics.emplace(kMineHit,
-                    std::make_shared<Texture>(mineHit, SDL_DestroyTexture));
+  _graphics.emplace(kMineHit, std::make_shared<Texture>(mineHit));
 
   for (int i = 0; i <= 8; i++) {
     std::string fileName =
@@ -64,7 +62,7 @@ bool GraphicsAssets::load() {
     if (!tex) {
       return false;
     }
-    _graphics.emplace(name, std::make_shared<Texture>(tex, SDL_DestroyTexture));
+    _graphics.emplace(name, std::make_shared<Texture>(tex));
   }
 
   return true;
