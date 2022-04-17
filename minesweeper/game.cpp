@@ -1,6 +1,7 @@
 // clang-format off
 #include "pch.h"
 #include "assets.hpp"
+#include "renderer.hpp"
 #include "components.hpp"
 #include "boardgenerator.hpp"
 #include "game.hpp"
@@ -54,7 +55,7 @@ bool Game::init() {
   }
 
   _window = window;
-  _renderer = renderer;
+  _renderer = std::make_shared<Renderer>(renderer);
 
   _graphicAssets->setRenderer(_renderer);
 
@@ -65,7 +66,7 @@ bool Game::init() {
 
   initEntities();
 
-  if (SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0) {
+  if (!_renderer->setDrawColor(0, 0, 0, SDL_ALPHA_OPAQUE) != 0) {
     return false;
   }
 
@@ -74,10 +75,14 @@ bool Game::init() {
 
 void Game::destroy() {
   // SDL_Delay(3000);
-  SDL_DestroyRenderer(_renderer);
+  // SDL_DestroyRenderer(_renderer);
   SDL_DestroyWindow(_window);
   SDL_Quit();
 }
+
+void Game::startFrame() { _renderer.get()->clear(); }
+
+void Game::endFrame() { _renderer.get()->present(); }
 
 void Game::run() {
   bool quit = false;
@@ -279,7 +284,8 @@ void Game::render() {
                      static_cast<int>(tile.position.row) * kTileSizeH,
                      kTileSizeW, kTileSizeH};
 
-    SDL_RenderCopy(_renderer, graphics.texture->raw_ptr(), nullptr, &dstRect);
+    SDL_RenderCopy(_renderer.get()->raw_ptr(), graphics.texture->raw_ptr(),
+                   nullptr, &dstRect);
   });
 }
 

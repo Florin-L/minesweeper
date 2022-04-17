@@ -188,6 +188,7 @@ copy $(SolutionDir)\third_party\SDL2_image\lib\x64\*.dll   $(SolutionDir)$(Platf
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets.hpp" />
@@ -195,6 +196,7 @@ copy $(SolutionDir)\third_party\SDL2_image\lib\x64\*.dll   $(SolutionDir)$(Platf
     <ClInclude Include="components.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="structs.hpp" />
   </ItemGroup>
   <ItemGroup>

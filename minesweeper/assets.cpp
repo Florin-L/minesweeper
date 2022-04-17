@@ -2,6 +2,7 @@
 // clang-format off
 #include "pch.h"
 #include "assets.hpp"
+#include "renderer.hpp"
 
 // clang-format on
 
@@ -29,23 +30,24 @@ SDL_Texture* createTextureFromImage(SDL_Renderer* renderer,
 bool GraphicsAssets::load() {
   fs::path imagePath;
 
-  SDL_Texture* unexplored =
-      createTextureFromImage(_renderer, "unexplored", _assetsDir,
-                             "Minesweeper_LAZARUS_21x21_unexplored.png");
+  SDL_Texture* unexplored = createTextureFromImage(
+      _renderer.get()->raw_ptr(), "unexplored", _assetsDir,
+      "Minesweeper_LAZARUS_21x21_unexplored.png");
   if (!unexplored) {
     return false;
   }
   _graphics.emplace(kUnexplored, std::make_shared<Texture>(unexplored));
 
-  SDL_Texture* mine = createTextureFromImage(
-      _renderer, "mine", _assetsDir, "Minesweeper_LAZARUS_21x21_mine.png");
+  SDL_Texture* mine =
+      createTextureFromImage(_renderer.get()->raw_ptr(), "mine", _assetsDir,
+                             "Minesweeper_LAZARUS_21x21_mine.png");
   if (!mine) {
     return false;
   }
   _graphics.emplace(kMine, std::make_shared<Texture>(mine));
 
   SDL_Texture* mineHit =
-      createTextureFromImage(_renderer, "mine_hit", _assetsDir,
+      createTextureFromImage(_renderer.get()->raw_ptr(), "mine_hit", _assetsDir,
                              "Minesweeper_LAZARUS_21x21_mine_hit.png");
   if (!mineHit) {
     return false;
@@ -57,8 +59,8 @@ bool GraphicsAssets::load() {
         "Minesweeper_LAZARUS_21x21_" + std::to_string(i) + ".png";
 
     std::string name = fmt::format("{}", i);
-    SDL_Texture* tex =
-        createTextureFromImage(_renderer, name, _assetsDir, fileName);
+    SDL_Texture* tex = createTextureFromImage(_renderer.get()->raw_ptr(), name,
+                                              _assetsDir, fileName);
     if (!tex) {
       return false;
     }

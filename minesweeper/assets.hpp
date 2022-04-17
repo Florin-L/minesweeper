@@ -13,24 +13,31 @@ const std::string k6("6");
 const std::string k7("7");
 const std::string k8("8");
 
+class Renderer;
+
 class Texture {
  public:
-  Texture(SDL_Texture* texture) : _tex(texture) {}
-  ~Texture() { SDL_DestroyTexture(_tex); }
+  explicit Texture(SDL_Texture* texture) : _tex(texture) {}
+  ~Texture() = default;
 
   Texture(const Texture&) = delete;
   Texture& operator=(const Texture&) = delete;
 
-  Texture(Texture&& other) {
-    SDL_DestroyTexture(_tex);
-    _tex = other._tex;
-    other._tex = nullptr;
-  }
+  Texture(Texture&& other) noexcept { _tex = std::move(other._tex); }
 
-  SDL_Texture* raw_ptr() const { return _tex; }
+  SDL_Texture* raw_ptr() const { return _tex.get(); }
+  SDL_Texture* release() { return _tex.release(); }
 
  private:
-  SDL_Texture* _tex{nullptr};
+  struct Deleter {
+    void operator()(SDL_Texture* tex) const {
+      if (tex != nullptr) {
+        SDL_DestroyTexture(tex);
+      }
+    }
+  };
+
+  std::unique_ptr<SDL_Texture, Deleter> _tex{nullptr};
 };
 
 /// @brief
@@ -45,7 +52,7 @@ class GraphicsAssets {
   GraphicsAssets(const GraphicsAssets&) = delete;
   GraphicsAssets& operator=(const GraphicsAssets&) = delete;
 
-  void setRenderer(SDL_Renderer* renderer) { _renderer = renderer; }
+  void setRenderer(std::shared_ptr<Renderer> renderer) { _renderer = renderer; }
 
   bool load();
 
@@ -58,7 +65,7 @@ class GraphicsAssets {
   }
 
  private:
-  SDL_Renderer* _renderer;
+  std::shared_ptr<Renderer> _renderer;
   std::filesystem::path _assetsDir;
   std::unordered_map<std::string, std::shared_ptr<Texture>> _graphics;
 };

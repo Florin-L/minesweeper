@@ -3,6 +3,7 @@
 #include "structs.hpp"
 
 class GraphicsAssets;
+class Renderer;
 
 /// @brief Game levels.
 enum class GameLevel { Beginner, Intermediate, Advanced };
@@ -75,13 +76,10 @@ class Game {
   void initEntities();
 
   /// @brief Starts rendering the current frame.
-  void startFrame() {
-    SDL_RenderClear(_renderer);
-    render();
-  }
+  void startFrame();
 
   /// @brief Ends rendering the current frame.
-  void endFrame() { SDL_RenderPresent(_renderer); }
+  void endFrame();
 
   /// @brief Recreates the components of a terminated game.
   void reset();
@@ -134,9 +132,10 @@ class Game {
   std::unique_ptr<GraphicsAssets>
       _graphicAssets;  //!< The graphics assets (textures).
 
-  SDL_Window* _window;      //!< The application/game main window.
-  SDL_Renderer* _renderer;  //!< The renderer (used to render the graphics
-                            //!< objetcs in the game window).
+  SDL_Window* _window;  //!< The application/game main window.
+  std::shared_ptr<Renderer> _renderer{
+      nullptr};  //!< The renderer (used to render the graphics
+                 //!< objetcs in the game window).
 
   GameLevel _gameLevel;  //!< The current difficulty level.
   int _boardSize;        //!< The dimension of the board.
