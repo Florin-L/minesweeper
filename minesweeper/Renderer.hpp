@@ -4,7 +4,11 @@ class Renderer {
   explicit Renderer(SDL_Renderer* renderer) : _renderer{renderer} {}
   ~Renderer() = default;
 
-  Renderer(Renderer&& other) { _renderer = std::move(other._renderer); }
+  Renderer(Renderer&& other) noexcept {
+    _renderer = std::move(other._renderer);
+  }
+
+  Renderer& operator=(const Renderer&&) = delete;
 
   SDL_Renderer* raw_ptr() const { return _renderer.get(); }
 

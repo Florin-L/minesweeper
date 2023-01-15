@@ -17,13 +17,14 @@ class Renderer;
 
 class Texture {
  public:
-  explicit Texture(SDL_Texture* texture) : _tex(texture) {}
+  explicit Texture(SDL_Texture* texture) noexcept : _tex(texture) {}
   ~Texture() = default;
 
   Texture(const Texture&) = delete;
   Texture& operator=(const Texture&) = delete;
 
   Texture(Texture&& other) noexcept { _tex = std::move(other._tex); }
+  Texture& operator=(Texture&&) = default;
 
   SDL_Texture* raw_ptr() const { return _tex.get(); }
   SDL_Texture* release() { return _tex.release(); }
@@ -51,6 +52,8 @@ class GraphicsAssets {
 
   GraphicsAssets(const GraphicsAssets&) = delete;
   GraphicsAssets& operator=(const GraphicsAssets&) = delete;
+  GraphicsAssets(GraphicsAssets&&) = delete;
+  GraphicsAssets& operator=(GraphicsAssets&&) = delete;
 
   void setRenderer(std::shared_ptr<Renderer> renderer) { _renderer = renderer; }
 

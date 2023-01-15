@@ -226,11 +226,11 @@ void Game::update(SDL_Event* ev) {
         return;
       }
 
-      // first click on a mine : swap the clicked on "entity" with the first
-      // entity which is not a "mine"
+      // if the first click is on a "mine" tile then swap the clicked "entity"
+      // with the first entity which is not a "mine"
       _logger->info(
-          "First clicked tile is a mine. Swap it with the first tile which is "
-          "not a mine.");
+          "First clicked tile is a 'mine'. Swap it with the first tile which "
+          "is not a 'mine'.");
 
       for (auto& e : _boardState.entities) {
         if (_registry.all_of<TileComponent, GraphicsComponent>(e)) {
